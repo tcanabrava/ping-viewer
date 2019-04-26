@@ -177,9 +177,9 @@ void Flasher::firmwareUpdatePercentage(const QString& output)
         qCDebug(FLASH) << output;
         return;
     }
-    QStringList percs = match.capturedTexts();
-    for(const auto& perc : percs) {
-        float _fw_update_perc = perc.toFloat();
+
+    for(const auto& perc : match.capturedTexts()) {
+        const float _fw_update_perc = perc.toFloat();
         qCDebug(FLASH) << _fw_update_perc;
         if (_fw_update_perc > 99.99) {
             QThread::msleep(1000);
