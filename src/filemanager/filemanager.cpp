@@ -34,13 +34,23 @@ FileManager::FileManager()
     }
 }
 
+/*
+usually macros are not nice, but sometimes they add a 
+layer of maintenability for the software, if well used.
+creates a variable named 'folder' in the current scope
+or returns if no variable could be created.
+ */
+#define getFolderOrReturn(folderType) \
+    auto folderIt = folderMap.find(folderType); \
+    if(folderIt == folderMap.end()) { \
+        qCWarning(FILEMANAGER) << "Folder pointer does not exist!"; \
+        return {}; \
+    } \
+    auto *folder = (*folderIt);
+
 QFileInfoList FileManager::getFilesFrom(Folder folderType)
 {
-    FolderStruct* folder = folderMap[folderType];
-    if(!folder) {
-        qCWarning(FILEMANAGER) << "Folder pointer does not exist.";
-        return {};
-    }
+    getFolderOrReturn(folderType);
     if(!folder->ok) {
         return {};
     }
@@ -51,11 +61,7 @@ QFileInfoList FileManager::getFilesFrom(Folder folderType)
 
 QUrl FileManager::getPathFrom(FileManager::Folder folderType)
 {
-    FolderStruct* folder = folderMap[folderType];
-    if(!folder) {
-        qCWarning(FILEMANAGER) << "Folder pointer does not exist!";
-        return {};
-    }
+    getFolderOrReturn(folderType);
     return QUrl::fromLocalFile(folder->dir.path());
 }
 
@@ -69,12 +75,7 @@ QObject* FileManager::qmlSingletonRegister(QQmlEngine* engine, QJSEngine* script
 
 QString FileManager::createFileName(FileManager::Folder folderType)
 {
-    auto folderIt = folderMap.find(folderType);
-    if(folderIt == folderMap.end()) {
-        qCWarning(FILEMANAGER) << "Folder pointer does not exist!";
-        return {};
-    }
-    auto *folder = (*folderIt);
+    getFolderOrReturn(folderType);
     QString path = folder->dir.path();
     QString result = path + '/'
                      + QDateTime::currentDateTime().toString(_fileName)
