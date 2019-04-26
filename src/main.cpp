@@ -86,16 +86,13 @@ int main(int argc, char *argv[])
     // Function used in CI to test runtime errors
     // After 5 seconds, check if qml engine was loaded
 #ifdef AUTO_KILL
-    QTimer *timer = new QTimer();
-    QObject::connect(timer, &QTimer::timeout, [&app, &engine]() {
+    QTimer::singleShot(5000, [&app, &engine]() {
         if(engine.rootObjects().isEmpty()) {
             printf("Application failed to load GUI!");
             app.exit(-1);
-        } else {
-            app.exit(0);
         }
+        app.exit(0);
     });
-    timer->start(5000);
 #endif
 
     engine.rootContext()->setContextProperty("GitVersion", QStringLiteral(GIT_VERSION));
