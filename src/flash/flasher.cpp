@@ -129,7 +129,7 @@ void Flasher::flash()
         };
 
         QString output(_firmwareProcess->readAllStandardOutput());
-        for(const auto errorString: errorStrings)
+        for(const auto& errorString: errorStrings)
         {
             if(output.contains(errorString, Qt::CaseInsensitive)) {
                 qCCritical(FLASH) << output;
