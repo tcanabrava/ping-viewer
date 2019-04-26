@@ -173,17 +173,19 @@ void Flasher::firmwareUpdatePercentage(const QString& output)
     // Track values like: (12.23%)
     QRegularExpression regex("\\d{1,3}[.]\\d\\d");
     QRegularExpressionMatch match = regex.match(output);
-    if(match.hasMatch()) {
-        QStringList percs = match.capturedTexts();
-        for(const auto& perc : percs) {
-            float _fw_update_perc = perc.toFloat();
-            qCDebug(FLASH) << _fw_update_perc;
-            if (_fw_update_perc > 99.99) {
-                QThread::msleep(1000);
-                setState(FlashFinished);
-            } else {
-                emit flashProgress(_fw_update_perc);
-            }
+    if(!match.hasMatch()) {
+        qCDebug(FLASH) << output;
+        return;
+    }
+    QStringList percs = match.capturedTexts();
+    for(const auto& perc : percs) {
+        float _fw_update_perc = perc.toFloat();
+        qCDebug(FLASH) << _fw_update_perc;
+        if (_fw_update_perc > 99.99) {
+            QThread::msleep(1000);
+            setState(FlashFinished);
+        } else {
+            emit flashProgress(_fw_update_perc);
         }
     }
 
