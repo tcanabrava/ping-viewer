@@ -66,14 +66,14 @@ QString Flasher::stm32flashPath()
 {
 #ifdef Q_OS_OSX
     // macdeployqt file do not put stm32flash binary in the same folder of pingviewer
-    static QString absoluteBinPath = QCoreApplication::applicationDirPath() + "/../..";
+    static QString absoluteBinPath = QCoreApplication::applicationDirPath() + QStringLiteral("/../..");
 #else
     static QString absoluteBinPath = QCoreApplication::applicationDirPath();
 #endif
 #ifdef Q_OS_WIN
-    return absoluteBinPath + "/stm32flash.exe";
+    return absoluteBinPath + QStringLiteral("/stm32flash.exe");
 #else
-    return absoluteBinPath + "/stm32flash";
+    return absoluteBinPath + QStringLiteral("/stm32flash");
 #endif
 }
 
@@ -105,7 +105,7 @@ void Flasher::flash()
     static QString cmd = QStringLiteral("\"%0\" -w \"%1\" %2 -g 0x0 -b %3 %4").arg(
                              stm32flashPath(),
                              firmwareFileInfo.absoluteFilePath(),
-                             _verify ? "-v" : "",
+                             _verify ? QStringLiteral("-v") : QString(),
                              baudRate,
                              portLocation
                          );
@@ -121,12 +121,13 @@ void Flasher::flash()
     connect(_firmwareProcess.data(), &QProcess::readyReadStandardOutput, this, [this] {
         // Error strings used to detect important messages for the user
         static const QStringList errorStrings = {
-            "error",
-            "fail",
-            "fatal",
-            "invalid",
-            "unexpected",
+            QStringLiteral("error"),
+            QStringLiteral("fail"),
+            QStringLiteral("fatal"),
+            QStringLiteral("invalid"),
+            QStringLiteral("unexpected"),
         };
+
         QString output(_firmwareProcess->readAllStandardOutput());
         for(const auto errorString: errorStrings)
         {
