@@ -33,14 +33,9 @@ void PingSimulationLink::randomUpdate()
     profile.set_profile_data_length(numPoints);
 
     for (int i = 0; i < numPoints; i++) {
-        float point;
-        if (i < stop1) {
-            point = 0.1 * (qrand()%256);
-        } else if (i < stop2) {
-            point = 255 * ((-4.0 / qPow((stop2-stop1), 2.0)) * qPow((i - stop1 - ((stop2-stop1) / 2.0)), 2.0)  + 1.0);
-        } else {
-            point = 0.45 * (qrand()%256);
-        }
+        float point = i < stop1 ?  0.1 * (qrand()%256)
+                    : i < stop2 ? 255 * ((-4.0 / qPow((stop2-stop1), 2.0)) * qPow((i - stop1 - ((stop2-stop1) / 2.0)), 2.0)  + 1.0)
+                    :  0.45 * (qrand()%256);
         profile.set_profile_data_at(i, point);
     }
 
