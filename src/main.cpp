@@ -88,17 +88,17 @@ int main(int argc, char *argv[])
 #ifdef AUTO_KILL
     QTimer::singleShot(5000, [&app, &engine]() {
         if(engine.rootObjects().isEmpty()) {
-            printf("Application failed to load GUI!");
+            qCInfo(mainCategory) << "Application failed to load GUI!";
             app.exit(-1);
         }
         app.exit(0);
     });
 #endif
-
-    engine.rootContext()->setContextProperty("GitVersion", QStringLiteral(GIT_VERSION));
-    engine.rootContext()->setContextProperty("GitVersionDate", QStringLiteral(GIT_VERSION_DATE));
-    engine.rootContext()->setContextProperty("GitTag", QStringLiteral(GIT_TAG));
-    engine.rootContext()->setContextProperty("GitUrl", QStringLiteral(GIT_URL));
+    auto *rootContext = engine.rootContext();
+    rootContext->setContextProperty(QStringLiteral("GitVersion"), QStringLiteral(GIT_VERSION));
+    rootContext->setContextProperty(QStringLiteral("GitVersionDate"), QStringLiteral(GIT_VERSION_DATE));
+    rootContext->setContextProperty(QStringLiteral("GitTag"), QStringLiteral(GIT_TAG));
+    rootContext->setContextProperty(QStringLiteral("GitUrl"), QStringLiteral(GIT_URL));
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
     qCInfo(mainCategory) << "Git version:" << GIT_VERSION;
