@@ -1,5 +1,6 @@
 #include <QDateTime>
 #include <QStandardPaths>
+#include <QQmlEngine>
 
 #include "filemanager.h"
 #include "logger.h"
@@ -60,9 +61,9 @@ QUrl FileManager::getPathFrom(FileManager::Folder folderType)
 
 QObject* FileManager::qmlSingletonRegister(QQmlEngine* engine, QJSEngine* scriptEngine)
 {
-    Q_UNUSED(engine)
     Q_UNUSED(scriptEngine)
 
+    engine->setObjectOwnership(self(), QQmlEngine::CppOwnership);
     return self();
 }
 
@@ -83,8 +84,8 @@ QString FileManager::createFileName(FileManager::Folder folderType)
 
 FileManager* FileManager::self()
 {
-    static FileManager* self = new FileManager();
-    return self;
+    static FileManager self;
+    return &self;
 }
 
 FileManager::~FileManager() = default;
