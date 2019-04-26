@@ -190,7 +190,7 @@ void Flasher::firmwareUpdatePercentage(const QString& output)
     qCDebug(FLASH) << output;
 }
 
-void Flasher::setState(Flasher::States state, QString message)
+void Flasher::setState(Flasher::States state,const QString& message)
 {
     if(_state != state) {
         _state = state;

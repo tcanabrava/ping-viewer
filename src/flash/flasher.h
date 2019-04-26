@@ -64,7 +64,7 @@ public:
      * @param state
      * @param message
      */
-    void setState(Flasher::States state, QString message = QString());
+    void setState(Flasher::States state,const QString& message = QString());
 
     /**
      * @brief Return flasher state
