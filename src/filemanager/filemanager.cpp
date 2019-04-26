@@ -69,11 +69,12 @@ QObject* FileManager::qmlSingletonRegister(QQmlEngine* engine, QJSEngine* script
 
 QString FileManager::createFileName(FileManager::Folder folderType)
 {
-    FolderStruct* folder = folderMap[folderType];
-    if(!folder) {
+    auto folderIt = folderMap.find(folderType);
+    if(folderIt == folderMap.end()) {
         qCWarning(FILEMANAGER) << "Folder pointer does not exist!";
         return {};
     }
+    auto *folder = (*folderIt);
     QString path = folder->dir.path();
     QString result = path + "/" \
                      + QDateTime::currentDateTime().toString(_fileName) \
